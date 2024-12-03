@@ -90,7 +90,7 @@
       setupEventSource(); // Only set up EventSource when starting crawling
       
       const functionKey = import.meta.env.VITE_AZURE_FUNCTION_KEY || '';
-      const response = await fetch(`${AZURE_FUNCTION_URL}/crawl`, {
+      const response = await fetch(`${AZURE_FUNCTION_URL}/start-crawl`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
