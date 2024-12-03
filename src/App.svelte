@@ -100,7 +100,14 @@
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to start crawling');
+      }
+
+      const data = await response.json();
+      if (data.screenshot) {
+        screenshots.set(url, data.screenshot);
+        screenshots = new Map(screenshots);
       }
       
       addLog('Started crawling ' + url);
