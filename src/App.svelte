@@ -60,7 +60,8 @@
       }
     });
 
-    eventSource.onerror = () => {
+      eventSource.onerror = (error) => {
+      console.error('EventSource error:', error); // Log the error to the console
       addLog('Connection error. Retrying...');
       isProcessing = false;
     };
