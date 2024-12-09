@@ -219,9 +219,10 @@
           "
         >
           <img
-            src={screenshots.get(url)}
+            src={`data:image/jpeg;base64,${screenshots.get(url)}`}
             alt={url}
             draggable="false"
+            on:load={() => console.log(`Setting src for ${url}: data:image/jpeg;base64,${screenshots.get(url)}`)}
           />
           <div class="url">{url}</div>
         </div>
