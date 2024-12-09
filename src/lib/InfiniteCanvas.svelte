@@ -160,6 +160,8 @@
   
   // Initialize
   onMount(() => {
+    console.log("Screenshots received:", screenshots);
+    console.log("Screenshots base64 data:", Array.from(screenshots.values()));
     initLayout();
     viewport.subscribe(drawMinimap);
   });
