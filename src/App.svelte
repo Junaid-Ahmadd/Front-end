@@ -6,7 +6,6 @@
   let crawledLinks: Array<{ url: string; depth: number }> = [];
   let screenshots: Map<string, string> = new Map();
   let logs: string[] = [];
-  let eventSource: EventSource | null = null;
   let isProcessing = false;
   let isCanvasOpen = false;
   let totalLinks = 0;
@@ -17,65 +16,11 @@
     console.log(message); // Log to the browser console
   }
 
-  function setupEventSource() {
-    eventSource = new EventSource(import.meta.env.VITE_AZURE_FUNCTION_URL);
-
-    eventSource.onopen = () => {
-      console.log('EventSource connection opened'); // Log to confirm connection
-      addLog('Connected to screenshot service');
-    };
-
-    eventSource.addEventListener('connected', (event) => {
-      addLog(event.data);
-    });
-
-    eventSource.addEventListener('links_found', (event) => {
-      const data = JSON.parse(event.data);
-      const { url: linkUrl, links, depth } = data;
-      addLog(`Found ${links.length} links on ${linkUrl}`);
-      addLog(`Received links: ${JSON.stringify(links)}`);
-
-      // Add to crawledLinks array
-      crawledLinks = [...crawledLinks, { url: linkUrl, depth }];
-      
-      // Add to uniqueLinks set
-      links.forEach(link => uniqueLinks.add(link));
-      uniqueLinks = new Set(uniqueLinks); // Trigger reactivity
-      
-      totalLinks = uniqueLinks.size;
-    });
-
-    eventSource.addEventListener('screenshot_complete', (event) => {
-      const data = JSON.parse(event.data);
-      screenshots.set(data.url, data.data);
-      screenshots = new Map(screenshots);
-      addLog(`Screenshot captured for ${data.url}`);
-      addLog(`Received screenshot data for ${data.url}: ${data.data}`);
-    });
-
-    eventSource.addEventListener('error', (event) => {
-      const data = JSON.parse(event.data);
-      addLog(`Error: ${data.error}`);
-      if (data.url) {
-        addLog(`Failed URL: ${data.url}`);
-      }
-    });
-
-      eventSource.onerror = (error) => {
-      console.error('EventSource error:', error); // Log the error to the console
-      addLog('Connection error. Retrying...');
-      isProcessing = false;
-    };
-  }
-
-  async function startCrawling() {
-    if (!url) {
-      addLog('Please enter a URL');
-      return;
-    }
+  async function submitUrl() {
+    if (!url) return;
 
     try {
-      // Reset state
+      // Reset all state
       crawledLinks = [];
       screenshots = new Map();
       logs = [];
@@ -83,12 +28,7 @@
       totalLinks = 0;
       isProcessing = true;
 
-      // Setup SSE if not already connected
-      if (!eventSource) {
-        setupEventSource();
-      }
-
-      // Start crawling
+      // Directly fetch from Azure Function
       const response = await fetch(import.meta.env.VITE_AZURE_FUNCTION_URL, {
         method: 'POST',
         headers: {
@@ -98,56 +38,30 @@
       });
 
       if (!response.ok) {
-        throw new Error('Failed to start crawling');
-      }
-
-      addLog(`Started crawling from ${url}`);
-
-    } catch (error) {
-      addLog(`Failed to start crawling: ${error.message}`);
-      isProcessing = false;
-    }
-  }
-
-  async function stopCrawling() {
-    try {
-      await fetch(import.meta.env.VITE_AZURE_FUNCTION_URL, {
-        method: 'POST'
-      });
-      addLog('Stopping crawler...');
-      
-      if (eventSource) {
-        eventSource.close();
-        eventSource = null;
-      }
-      
-      isProcessing = false;
-    } catch (error) {
-      addLog(`Error stopping crawler: ${error.message}`);
-    }
-  }
-
-  async function submitUrl() {
-    if (!url) return;
-
-    try {
-      const response = await fetch(import.meta.env.VITE_AZURE_FUNCTION_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url })
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Crawling failed');
       }
 
       const data = await response.json();
-      crawledLinks = data.links;
-      screenshots = new Map(data.screenshots.map(s => [s.url, s.data]));
+
+      // Process links
+      crawledLinks = data.links.map(link => ({ url: link, depth: 0 }));
+      uniqueLinks = new Set(crawledLinks.map(link => link.url));
+      totalLinks = uniqueLinks.size;
+
+      // Process screenshots
+      screenshots = new Map(
+        data.screenshots.map(screenshot => [
+          screenshot.url, 
+          screenshot.data
+        ])
+      );
+
+      addLog(`Crawled ${totalLinks} unique links`);
+      isProcessing = false;
+
     } catch (error) {
-      addLog('Error: ' + error.message);
+      addLog(`Crawling error: ${error.message}`);
+      isProcessing = false;
     }
   }
 
@@ -157,9 +71,6 @@
 
   onMount(() => {
     return () => {
-      if (eventSource) {
-        eventSource.close();
-      }
     };
   });
 </script>
@@ -178,7 +89,7 @@
     {#if !isProcessing}
       <button on:click={submitUrl} disabled={!url}>Submit URL</button>
     {:else}
-      <button on:click={stopCrawling} class="stop">Stop</button>
+      <button on:click={() => isProcessing = false} class="stop">Stop</button>
     {/if}
   </div>
 
