@@ -21,6 +21,7 @@
     eventSource = new EventSource(import.meta.env.VITE_AZURE_FUNCTION_URL);
 
     eventSource.onopen = () => {
+      console.log('EventSource connection opened'); // Log to confirm connection
       addLog('Connected to screenshot service');
     };
 
