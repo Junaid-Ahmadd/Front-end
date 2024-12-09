@@ -52,7 +52,7 @@
       screenshots = new Map(
         data.screenshots.map(screenshot => [
           screenshot.url, 
-          btoa(String.fromCharCode(...new Uint8Array(screenshot.data))) // Convert to base64 encoded data
+          screenshot.data
         ])
       );
 
