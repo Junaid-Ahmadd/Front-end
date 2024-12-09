@@ -14,6 +14,7 @@
 
   function addLog(message: string) {
     logs = [...logs, `[${new Date().toLocaleTimeString()}] ${message}`];
+    console.log(message); // Log to the browser console
   }
 
   function setupEventSource() {
@@ -31,7 +32,8 @@
       const data = JSON.parse(event.data);
       const { url: linkUrl, links, depth } = data;
       addLog(`Found ${links.length} links on ${linkUrl}`);
-      
+      addLog(`Received links: ${JSON.stringify(links)}`);
+
       // Add to crawledLinks array
       crawledLinks = [...crawledLinks, { url: linkUrl, depth }];
       
@@ -47,6 +49,7 @@
       screenshots.set(data.url, data.data);
       screenshots = new Map(screenshots);
       addLog(`Screenshot captured for ${data.url}`);
+      addLog(`Received screenshot data for ${data.url}: ${data.data}`);
     });
 
     eventSource.addEventListener('error', (event) => {
