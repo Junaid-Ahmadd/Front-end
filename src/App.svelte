@@ -56,6 +56,9 @@
         ])
       );
 
+      // Log the contents of the screenshots Map
+      console.log("Screenshots Map:", Array.from(screenshots.entries()));
+
       addLog(`Crawled ${totalLinks} unique links`);
       isProcessing = false;
 
