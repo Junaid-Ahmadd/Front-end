@@ -70,9 +70,10 @@
   });
 </script>
 
+
 <main>
   <h1>Web Crawler & Screenshot Tool</h1>
-  <p>Enter a URL to start crawling and capturing screenshots</p>
+  <p class="description">Enter a URL to start crawling and capturing screenshots</p>
 
   <div class="input-group">
     <input
@@ -82,9 +83,13 @@
       disabled={isProcessing}
     />
     {#if !isProcessing}
-      <button on:click={submitUrl} disabled={!url}>Submit URL</button>
+      <button on:click={submitUrl} disabled={!url} class="submit-btn">
+        Submit URL
+      </button>
     {:else}
-      <button on:click={() => isProcessing = false} class="stop">Stop</button>
+      <button on:click={() => (isProcessing = false)} class="stop-btn">
+        Stop
+      </button>
     {/if}
   </div>
 
@@ -92,7 +97,7 @@
     <div class="stats">
       <span>Unique Pages Found: {totalLinks}</span>
       <span>Screenshots: {screenshots.size}</span>
-      <button on:click={toggleCanvas} class="view-screenshots">
+      <button on:click={toggleCanvas} class="toggle-canvas-btn">
         {isCanvasOpen ? 'Hide Screenshots' : 'View Screenshots'}
       </button>
     </div>
@@ -107,8 +112,7 @@
             <div class="link-item">
               <span class="link-url">{link}</span>
               {#if screenshots.has(link)}
-                <span class="status captured">Screenshot Captured</span>
-             
+                <span class="status captured">✔ Screenshot Captured</span>
               {/if}
             </div>
           {/each}
@@ -128,89 +132,162 @@
 {/if}
 
 <style>
+  /* General Styling */
+  :root {
+    --primary-color: #4CAF50;
+    --secondary-color: #2196F3;
+    --danger-color: #f44336;
+    --background-light: #f9f9f9;
+    --text-color: #333;
+    --font-family: 'Roboto', sans-serif;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-family);
+    background: var(--background-light);
+    color: var(--text-color);
+  }
+
   main {
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 100%;
     padding: 20px;
+    margin: auto;
   }
 
   h1 {
     text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 10px;
   }
 
+  .description {
+    text-align: center;
+    color: #666;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+  }
+
+  /* Input Group */
   .input-group {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 10px;
-    margin: 20px 0;
+    margin-bottom: 20px;
   }
 
   input {
-    flex: 1;
-    padding: 8px;
+    width: 100%;
+    max-width: 600px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
   }
 
   button {
-    padding: 8px 16px;
-    background: #4CAF50;
-    color: white;
+    padding: 10px 20px;
+    font-size: 1em;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
   }
 
-  button:disabled {
+  button:hover {
+    transform: scale(1.05);
+  }
+
+  .submit-btn {
+    background: var(--primary-color);
+    color: white;
+  }
+
+  .submit-btn:disabled {
     background: #ccc;
+    cursor: not-allowed;
   }
 
-  button.stop {
-    background: #f44336;
+  .stop-btn {
+    background: var(--danger-color);
+    color: white;
   }
 
-  button.view-screenshots {
-    background: #2196F3;
+  .toggle-canvas-btn {
+    background: var(--secondary-color);
+    color: white;
   }
 
+  /* Stats Section */
   .stats {
-    margin: 20px 0;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 20px;
-    align-items: center;
+    margin: 20px 0;
   }
 
+  /* Content Section */
   .content {
-    display: grid;
-    grid-template-columns: 1fr 300px;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
   }
 
   .links-list {
     border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
   }
 
   .link-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px;
+    padding: 8px 0;
     border-bottom: 1px solid #eee;
   }
 
+  .link-item:last-child {
+    border-bottom: none;
+  }
+
   .link-url {
-    word-break: break-all;
-    margin-right: 10px;
+    word-break: break-word;
   }
 
   .status {
     font-size: 0.9em;
-    padding: 2px 6px;
-    border-radius: 3px;
+    padding: 5px 10px;
+    border-radius: 5px;
   }
 
   .status.captured {
-    background: #4CAF50;
+    background: var(--primary-color);
     color: white;
   }
 
-  
+  /* Responsive Design */
+  @media (min-width: 600px) {
+    .input-group {
+      flex-direction: row;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+    }
+  }
+
+  @media (min-width: 800px) {
+    .content {
+      flex-direction: row;
+    }
+
+    .links-list {
+      flex: 1;
+    }
+  }
 </style>
