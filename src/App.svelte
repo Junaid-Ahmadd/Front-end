@@ -108,8 +108,7 @@
               <span class="link-url">{link}</span>
               {#if screenshots.has(link)}
                 <span class="status captured">Screenshot Captured</span>
-              {:else}
-                <span class="status pending">Pending</span>
+             
               {/if}
             </div>
           {/each}
@@ -213,8 +212,5 @@
     color: white;
   }
 
-  .status.pending {
-    background: #FFC107;
-    color: black;
-  }
+  
 </style>
