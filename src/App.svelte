@@ -5,16 +5,10 @@
   let url = "";
   let crawledLinks: Array<{ url: string; depth: number }> = [];
   let screenshots: Map<string, string> = new Map();
-  
   let isProcessing = false;
   let isCanvasOpen = false;
   let totalLinks = 0;
   let uniqueLinks = new Set<string>();
-
-  function addLog(message: string) {
-   
-    console.log(message); // Log to the browser console
-  }
 
   async function submitUrl() {
     if (!url) return;
@@ -23,7 +17,6 @@
       // Reset all state
       crawledLinks = [];
       screenshots = new Map();
-      
       uniqueLinks.clear();
       totalLinks = 0;
       isProcessing = true;
@@ -52,18 +45,17 @@
       screenshots = new Map(
         data.screenshots.map(screenshot => [
           screenshot.url, 
-          screenshot.data
+          screenshot.data // This should be the base64 encoded data
         ])
       );
 
       // Log the contents of the screenshots Map
       console.log("Screenshots Map:", Array.from(screenshots.entries()));
 
-      addLog(`Crawled ${totalLinks} unique links`);
       isProcessing = false;
 
     } catch (error) {
-      addLog(`Crawling error: ${error.message}`);
+      console.error(`Crawling error: ${error.message}`);
       isProcessing = false;
     }
   }
@@ -124,8 +116,6 @@
         </div>
       {/if}
     </div>
-
-    
   </div>
 </main>
 
@@ -143,61 +133,88 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
 
   h1 {
-    color: #333;
     text-align: center;
-    margin-bottom: 20px;
   }
 
   .input-group {
     display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin: 20px 0;
   }
 
-  input[type="text"], input[type="number"] {
-    padding: 10px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 300px;
+  input {
+    flex: 1;
+    padding: 8px;
   }
 
   button {
-   padding: 10px 15px;
-    background-color: #007bff;
+    padding: 8px 16px;
+    background: #4CAF50;
     color: white;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s;
   }
 
+  button:disabled {
+    background: #ccc;
+  }
 
-  button:hover {
-    background-color: #0056b3;
+  button.stop {
+    background: #f44336;
+  }
+
+  button.view-screenshots {
+    background: #2196F3;
   }
 
   .stats {
-     text-align: center;
-    margin-top: 20px;
-    font-size: 18px;
-    color: #555;
+    margin: 20px 0;
+    display: flex;
+    gap: 20px;
+    align-items: center;
   }
 
- .stop {
-    background-color: #dc3545;
+  .content {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
   }
 
-  .stop:hover {
-    background-color: #c82333;
+  .links-list {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
   }
 
-  
+  .link-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .link-url {
+    word-break: break-all;
+    margin-right: 10px;
+  }
+
+  .status {
+    font-size: 0.9em;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  .status.captured {
+    background: #4CAF50;
+    color: white;
+  }
+
+  .status.pending {
+    background: #FFC107;
+    color: black;
+  }
 </style>
