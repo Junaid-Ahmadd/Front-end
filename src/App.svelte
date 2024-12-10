@@ -74,7 +74,7 @@
 <main class="container">
   <div class="header">
     <h1>Web Crawler & Screenshot Tool</h1>
-    <p class="subtitle">Explore website structures visually with our advanced crawler</p>
+    <p class="subtitle">Uncover website structures and capture visual representations effortlessly.</p>
   </div>
 
   <div class="input-section">
@@ -97,12 +97,7 @@
           </svg>
           Processing...
         {:else}
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="16" x2="12" y2="12"/>
-            <line x1="12" y1="8" x2="12" y2="8"/>
-          </svg>
-          Start Crawling
+          <span>🚀 Start Crawling</span>
         {/if}
       </button>
     </div>
@@ -114,7 +109,7 @@
           <span class="value">{totalLinks}</span>
         </div>
         <div class="stat">
-          <span class="label">Screenshots</span>
+          <span class="label">Screenshots Captured</span>
           <span class="value">{screenshots.size}</span>
         </div>
       </div>
@@ -129,7 +124,7 @@
           <div class="link-item">
             <span class="link-url">{link}</span>
             {#if screenshots.has(link)}
-              <span class="status captured">✔ Screenshot Captured</span>
+              <span class="status captured">✔ Captured</span>
             {/if}
           </div>
         {/each}
@@ -157,25 +152,41 @@
 </main>
 
 <style>
-  /* Maintain existing styles */
+  /* Global variables for colors and fonts */
   :root {
-    --primary: #4CAF50;
-    --primary-hover: #45A049;
-    --danger: #f44336;
-    --surface: #fff;
-    --surface-lighter: #f1f1f1;
+    --primary: #6c63ff;
+    --primary-hover: #584fd1;
+    --secondary: #f3f4f6;
+    --text-primary: #333;
     --text-secondary: #666;
+    --background: #f9f9fb;
+    --surface: #fff;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --border-radius: 10px;
+    --font-family: 'Roboto', sans-serif;
+  }
+
+  /* General styles */
+  body {
+    font-family: var(--font-family);
+    color: var(--text-primary);
+    background: var(--background);
+    margin: 0;
+    padding: 0;
   }
 
   .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
+    box-shadow: 0 4px 6px var(--shadow);
+    border-radius: var(--border-radius);
+    background: var(--surface);
   }
 
   .header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
   }
 
   h1 {
@@ -188,79 +199,139 @@
 
   .subtitle {
     color: var(--text-secondary);
-    margin: 0.5rem 0 0;
+    font-size: 1rem;
   }
 
   .input-section {
     margin-bottom: 2rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary-hover), var(--primary));
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px var(--shadow);
+    color: white;
   }
 
   .url-input {
     display: flex;
     gap: 1rem;
-    margin-bottom: 1rem;
+    align-items: center;
   }
 
   input {
     flex: 1;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: inset 0 2px 4px var(--shadow);
+  }
+
+  input:disabled {
+    background: var(--secondary);
+  }
+
+  .submit-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--border-radius);
+    background: var(--surface);
+    color: var(--primary-hover);
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+  }
+
+  .submit-btn:disabled {
+    background: var(--secondary);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+  }
+
+  .submit-btn:hover:not(:disabled) {
+    background: var(--primary-hover);
+    color: white;
+    transform: translateY(-2px);
   }
 
   .stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    display: flex;
     gap: 1rem;
+    margin-top: 1rem;
+    justify-content: space-between;
   }
 
   .stat {
-    background: var(--surface);
     padding: 1rem;
-    border-radius: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
+    background: var(--secondary);
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: 0 2px 4px var(--shadow);
   }
 
   .stat .label {
-    font-size: 0.875rem;
     color: var(--text-secondary);
+    font-size: 0.875rem;
   }
 
   .stat .value {
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: bold;
+    color: var(--primary-hover);
   }
 
   .content-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    margin-top: 2rem;
   }
 
   .links-list {
-    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: var(--border-radius);
     background: var(--surface);
-    padding: 15px;
-    border-radius: 5px;
+    box-shadow: 0 2px 4px var(--shadow);
   }
 
   .link-item {
+    padding: 0.5rem 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--secondary);
   }
 
   .link-item:last-child {
     border-bottom: none;
   }
 
-  .view-canvas {
+  .link-url {
+    color: var(--primary-hover);
+    word-break: break-word;
+  }
+
+  .status {
+    background: var(--primary);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    font-weight: bold;
+  }
+
+  .toggle-canvas-btn {
     margin-top: 1rem;
+    background: var(--primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .toggle-canvas-btn:hover {
+    transform: translateY(-3px);
   }
 
   .spinner {
@@ -270,8 +341,11 @@
   }
 
   @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 </style>
-
