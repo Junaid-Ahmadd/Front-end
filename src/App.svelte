@@ -71,173 +71,178 @@
 </script>
 
 
-<main>
-  <h1>Web Crawler & Screenshot Tool</h1>
-  <p class="description">Enter a URL to start crawling and capturing screenshots</p>
+<main class="container">
+  <div class="header">
+    <h1>Web Crawler & Screenshot Tool</h1>
+    <p class="subtitle">Explore website structures visually with our advanced crawler</p>
+  </div>
 
-  <div class="input-group">
-    <input
-      type="text"
-      bind:value={url}
-      placeholder="Enter website URL (e.g., https://example.com)"
-      disabled={isProcessing}
-    />
-    {#if !isProcessing}
-      <button on:click={submitUrl} disabled={!url} class="submit-btn">
-        Submit URL
+  <div class="input-section">
+    <div class="url-input">
+      <input
+        type="text"
+        bind:value={url}
+        placeholder="Enter website URL (e.g., https://example.com)"
+        on:keydown={(e) => e.key === 'Enter' && submitUrl()}
+        disabled={isProcessing}
+      />
+      <button
+        class="submit-btn"
+        on:click={submitUrl}
+        disabled={!url || isProcessing}
+      >
+        {#if isProcessing}
+          <svg class="spinner" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="4" />
+          </svg>
+          Processing...
+        {:else}
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12" y2="8"/>
+          </svg>
+          Start Crawling
+        {/if}
       </button>
-    {:else}
-      <button on:click={() => (isProcessing = false)} class="stop-btn">
-        Stop
+    </div>
+
+    {#if totalLinks > 0}
+      <div class="stats">
+        <div class="stat">
+          <span class="label">Unique Pages Found</span>
+          <span class="value">{totalLinks}</span>
+        </div>
+        <div class="stat">
+          <span class="label">Screenshots</span>
+          <span class="value">{screenshots.size}</span>
+        </div>
+      </div>
+    {/if}
+  </div>
+
+  <div class="content-section">
+    {#if totalLinks > 0}
+      <div class="links-list">
+        <h2>Discovered Links</h2>
+        {#each Array.from(uniqueLinks) as link}
+          <div class="link-item">
+            <span class="link-url">{link}</span>
+            {#if screenshots.has(link)}
+              <span class="status captured">✔ Screenshot Captured</span>
+            {/if}
+          </div>
+        {/each}
+      </div>
+    {/if}
+
+    {#if screenshots.size > 0}
+      <button
+        class="view-canvas toggle-canvas-btn"
+        on:click={toggleCanvas}
+      >
+        {isCanvasOpen ? 'Hide Screenshots' : 'View Screenshots'}
       </button>
     {/if}
   </div>
 
-  {#if totalLinks > 0}
-    <div class="stats">
-      <span>Unique Pages Found: {totalLinks}</span>
-      <span>Screenshots: {screenshots.size}</span>
-      <button on:click={toggleCanvas} class="toggle-canvas-btn">
-        {isCanvasOpen ? 'Hide Screenshots' : 'View Screenshots'}
-      </button>
-    </div>
+  {#if isCanvasOpen}
+    <InfiniteCanvas
+      {screenshots}
+      {crawledLinks}
+      isOpen={isCanvasOpen}
+      onClose={toggleCanvas}
+    />
   {/if}
-
-  <div class="content">
-    <div class="results">
-      {#if uniqueLinks.size > 0}
-        <div class="links-list">
-          <h3>Discovered Links</h3>
-          {#each Array.from(uniqueLinks) as link}
-            <div class="link-item">
-              <span class="link-url">{link}</span>
-              {#if screenshots.has(link)}
-                <span class="status captured">✔ Screenshot Captured</span>
-              {/if}
-            </div>
-          {/each}
-        </div>
-      {/if}
-    </div>
-  </div>
 </main>
 
-{#if isCanvasOpen}
-  <InfiniteCanvas
-    {screenshots}
-    {crawledLinks}
-    isOpen={isCanvasOpen}
-    onClose={toggleCanvas}
-  />
-{/if}
-
 <style>
-  /* General Styling */
+  /* Maintain existing styles */
   :root {
-    --primary-color: #4CAF50;
-    --secondary-color: #2196F3;
-    --danger-color: #f44336;
-    --background-light: #f9f9f9;
-    --text-color: #333;
-    --font-family: 'Roboto', sans-serif;
+    --primary: #4CAF50;
+    --primary-hover: #45A049;
+    --danger: #f44336;
+    --surface: #fff;
+    --surface-lighter: #f1f1f1;
+    --text-secondary: #666;
   }
 
-  body {
-    margin: 0;
-    font-family: var(--font-family);
-    background: var(--background-light);
-    color: var(--text-color);
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
   }
 
-  main {
-    max-width: 100%;
-    padding: 20px;
-    margin: auto;
+  .header {
+    text-align: center;
+    margin-bottom: 3rem;
   }
 
   h1 {
-    text-align: center;
-    font-size: 2.5em;
-    margin-bottom: 10px;
+    font-size: 2.5rem;
+    margin: 0;
+    background: linear-gradient(45deg, var(--primary), var(--primary-hover));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
-  .description {
-    text-align: center;
-    color: #666;
-    font-size: 1.2em;
-    margin-bottom: 20px;
+  .subtitle {
+    color: var(--text-secondary);
+    margin: 0.5rem 0 0;
   }
 
-  /* Input Group */
-  .input-group {
+  .input-section {
+    margin-bottom: 2rem;
+  }
+
+  .url-input {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 1rem;
+    margin-bottom: 1rem;
   }
 
   input {
-    width: 100%;
-    max-width: 600px;
+    flex: 1;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 1em;
   }
 
-  button {
-    padding: 10px 20px;
-    font-size: 1em;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-  }
-
-  button:hover {
-    transform: scale(1.05);
-  }
-
-  .submit-btn {
-    background: var(--primary-color);
-    color: white;
-  }
-
-  .submit-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-  }
-
-  .stop-btn {
-    background: var(--danger-color);
-    color: white;
-  }
-
-  .toggle-canvas-btn {
-    background: var(--secondary-color);
-    color: white;
-  }
-
-  /* Stats Section */
   .stats {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    margin: 20px 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
   }
 
-  /* Content Section */
-  .content {
+  .stat {
+    background: var(--surface);
+    padding: 1rem;
+    border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .stat .label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+
+  .stat .value {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .content-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 
   .links-list {
     border: 1px solid #ddd;
-    background: white;
+    background: var(--surface);
     padding: 15px;
     border-radius: 5px;
   }
@@ -254,40 +259,19 @@
     border-bottom: none;
   }
 
-  .link-url {
-    word-break: break-word;
+  .view-canvas {
+    margin-top: 1rem;
   }
 
-  .status {
-    font-size: 0.9em;
-    padding: 5px 10px;
-    border-radius: 5px;
+  .spinner {
+    animation: spin 1s linear infinite;
+    width: 16px;
+    height: 16px;
   }
 
-  .status.captured {
-    background: var(--primary-color);
-    color: white;
-  }
-
-  /* Responsive Design */
-  @media (min-width: 600px) {
-    .input-group {
-      flex-direction: row;
-      gap: 10px;
-    }
-
-    input {
-      flex: 1;
-    }
-  }
-
-  @media (min-width: 800px) {
-    .content {
-      flex-direction: row;
-    }
-
-    .links-list {
-      flex: 1;
-    }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
 </style>
+
