@@ -74,7 +74,7 @@
 <main class="container">
   <div class="header">
     <h1>Web Crawler & Screenshot Tool</h1>
-    <p class="subtitle">Uncover website structures and capture visual representations effortlessly.</p>
+    <p class="subtitle">Explore website structures visually and capture screenshots easily.</p>
   </div>
 
   <div class="input-section">
@@ -82,7 +82,7 @@
       <input
         type="text"
         bind:value={url}
-        placeholder="Enter website URL (e.g., https://example.com)"
+        placeholder="Enter website URL"
         on:keydown={(e) => e.key === 'Enter' && submitUrl()}
         disabled={isProcessing}
       />
@@ -97,7 +97,7 @@
           </svg>
           Processing...
         {:else}
-          <span>🚀 Start Crawling</span>
+          <span>Start Crawling</span>
         {/if}
       </button>
     </div>
@@ -105,11 +105,11 @@
     {#if totalLinks > 0}
       <div class="stats">
         <div class="stat">
-          <span class="label">Unique Pages Found</span>
+          <span class="label">Pages Found</span>
           <span class="value">{totalLinks}</span>
         </div>
         <div class="stat">
-          <span class="label">Screenshots Captured</span>
+          <span class="label">Screenshots</span>
           <span class="value">{screenshots.size}</span>
         </div>
       </div>
@@ -152,7 +152,6 @@
 </main>
 
 <style>
-  /* Global variables for colors and fonts */
   :root {
     --primary: #6c63ff;
     --primary-hover: #584fd1;
@@ -162,11 +161,10 @@
     --background: #f9f9fb;
     --surface: #fff;
     --shadow: rgba(0, 0, 0, 0.1);
-    --border-radius: 10px;
+    --border-radius: 8px;
     --font-family: 'Roboto', sans-serif;
   }
 
-  /* General styles */
   body {
     font-family: var(--font-family);
     color: var(--text-primary);
@@ -176,9 +174,8 @@
   }
 
   .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
+    max-width: 100%;
+    padding: 1rem;
     box-shadow: 0 4px 6px var(--shadow);
     border-radius: var(--border-radius);
     background: var(--surface);
@@ -186,11 +183,11 @@
 
   .header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   h1 {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
     margin: 0;
     background: linear-gradient(45deg, var(--primary), var(--primary-hover));
     -webkit-background-clip: text;
@@ -199,30 +196,26 @@
 
   .subtitle {
     color: var(--text-secondary);
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .input-section {
-    margin-bottom: 2rem;
-    padding: 1rem;
-    background: linear-gradient(135deg, var(--primary-hover), var(--primary));
-    border-radius: var(--border-radius);
-    box-shadow: 0 4px 6px var(--shadow);
-    color: white;
+    margin-bottom: 1rem;
   }
 
   .url-input {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
     align-items: center;
   }
 
   input {
     flex: 1;
-    padding: 10px;
-    border: none;
+    padding: 8px;
+    border: 1px solid var(--secondary);
     border-radius: var(--border-radius);
     box-shadow: inset 0 2px 4px var(--shadow);
+    font-size: 0.9rem;
   }
 
   input:disabled {
@@ -230,16 +223,15 @@
   }
 
   .submit-btn {
-    padding: 0.5rem 1rem;
+    padding: 8px 12px;
     border: none;
     border-radius: var(--border-radius);
-    background: var(--surface);
-    color: var(--primary-hover);
-    cursor: pointer;
+    background: var(--primary);
+    color: white;
+    font-size: 0.9rem;
     font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    white-space: nowrap;
+    cursor: pointer;
     transition: all 0.3s;
   }
 
@@ -251,19 +243,18 @@
 
   .submit-btn:hover:not(:disabled) {
     background: var(--primary-hover);
-    color: white;
-    transform: translateY(-2px);
   }
 
   .stats {
     display: flex;
     gap: 1rem;
-    margin-top: 1rem;
     justify-content: space-between;
+    margin-top: 1rem;
   }
 
   .stat {
-    padding: 1rem;
+    flex: 1;
+    padding: 8px;
     background: var(--secondary);
     border-radius: var(--border-radius);
     text-align: center;
@@ -272,28 +263,25 @@
 
   .stat .label {
     color: var(--text-secondary);
-    font-size: 0.875rem;
+    font-size: 0.8rem;
   }
 
   .stat .value {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: bold;
     color: var(--primary-hover);
   }
 
-  .content-section {
-    margin-top: 2rem;
-  }
-
   .links-list {
-    padding: 1rem;
+    margin-top: 1rem;
+    padding: 0.5rem;
     border-radius: var(--border-radius);
     background: var(--surface);
     box-shadow: 0 2px 4px var(--shadow);
   }
 
   .link-item {
-    padding: 0.5rem 0;
+    padding: 0.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -307,14 +295,15 @@
   .link-url {
     color: var(--primary-hover);
     word-break: break-word;
+    font-size: 0.85rem;
   }
 
   .status {
     background: var(--primary);
     color: white;
-    padding: 0.25rem 0.5rem;
+    padding: 2px 6px;
     border-radius: var(--border-radius);
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     font-weight: bold;
   }
 
@@ -322,16 +311,18 @@
     margin-top: 1rem;
     background: var(--primary);
     color: white;
-    padding: 0.5rem 1rem;
+    padding: 8px 12px;
     border: none;
     border-radius: var(--border-radius);
-    font-size: 1rem;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: transform 0.2s;
+    white-space: nowrap;
   }
 
   .toggle-canvas-btn:hover {
-    transform: translateY(-3px);
+    background: var(--primary-hover);
+    transform: translateY(-2px);
   }
 
   .spinner {
@@ -346,6 +337,21 @@
     }
     to {
       transform: rotate(360deg);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .stats {
+      flex-direction: column;
+    }
+
+    .url-input {
+      flex-direction: column;
+    }
+
+    input,
+    .submit-btn {
+      width: 100%;
     }
   }
 </style>
