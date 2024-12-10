@@ -97,7 +97,7 @@
           </svg>
           Processing...
         {:else}
-          <span>Start Crawling</span>
+          <span>🚀 Start Crawling</span>
         {/if}
       </button>
     </div>
@@ -116,6 +116,16 @@
     {/if}
   </div>
 
+ {#if screenshots.size > 0}
+      <button
+        class="view-canvas toggle-canvas-btn"
+        on:click={toggleCanvas}
+      >
+        {isCanvasOpen ? 'Hide Screenshots' : 'View Screenshots'}
+      </button>
+    {/if}
+  </div>
+
   <div class="content-section">
     {#if totalLinks > 0}
       <div class="links-list">
@@ -131,15 +141,7 @@
       </div>
     {/if}
 
-    {#if screenshots.size > 0}
-      <button
-        class="view-canvas toggle-canvas-btn"
-        on:click={toggleCanvas}
-      >
-        {isCanvasOpen ? 'Hide Screenshots' : 'View Screenshots'}
-      </button>
-    {/if}
-  </div>
+   
 
   {#if isCanvasOpen}
     <InfiniteCanvas
@@ -152,91 +154,144 @@
 </main>
 
 <style>
+  /* Global variables for colors and fonts */
+  :root {
+    --primary: #6c63ff;
+    --primary-hover: #584fd1;
+    --secondary: #f3f4f6;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --background: #f9f9fb;
+    --surface: #fff;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --border-radius: 10px;
+    --font-family: 'Roboto', sans-serif;
+  }
+
   /* General styles */
+  body {
+    font-family: var(--font-family);
+    color: var(--text-primary);
+    background: var(--background);
+    margin: 0;
+    padding: 0;
+  }
+
   .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem; /* Reduced padding for better responsiveness */
+    padding: 2rem;
+    box-shadow: 0 4px 6px var(--shadow);
+    border-radius: var(--border-radius);
+    background: var(--surface);
   }
 
   .header {
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
   }
 
   h1 {
-    font-size: 2rem; /* Slightly smaller font for better mobile readability */
+    font-size: 2.5rem;
     margin: 0;
+    background: linear-gradient(45deg, var(--primary), var(--primary-hover));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   .subtitle {
+    color: var(--text-secondary);
     font-size: 1rem;
-    margin: 0.5rem 0 0;
   }
 
   .input-section {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, var(--primary-hover), var(--primary));
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px var(--shadow);
+    color: white;
   }
 
   .url-input {
     display: flex;
-    gap: 0.5rem; /* Reduced gap for compact layout */
+    gap: 1rem;
     align-items: center;
-    flex-wrap: wrap; /* Ensures input and button stack on smaller screens */
   }
 
   input {
     flex: 1;
-    padding: 8px; /* Compact padding */
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    padding: 10px;
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: inset 0 2px 4px var(--shadow);
+  }
+
+  input:disabled {
+    background: var(--secondary);
   }
 
   .submit-btn {
-    padding: 8px 16px;
+    padding: 0.5rem 1rem;
     border: none;
-    border-radius: 8px;
-    background: #4CAF50;
-    color: white;
+    border-radius: var(--border-radius);
+    background: var(--surface);
+    color: var(--primary-hover);
     cursor: pointer;
-    white-space: nowrap; /* Prevents text wrapping */
+    font-weight: bold;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    transition: all 0.3s;
   }
 
   .submit-btn:disabled {
-    background: #ccc;
+    background: var(--secondary);
+    color: var(--text-secondary);
     cursor: not-allowed;
+  }
+
+  .submit-btn:hover:not(:disabled) {
+    background: var(--primary-hover);
+    color: white;
+    transform: translateY(-2px);
   }
 
   .stats {
     display: flex;
-    flex-wrap: wrap; /* Ensures stats stack on smaller screens */
     gap: 1rem;
     margin-top: 1rem;
     justify-content: space-between;
   }
 
   .stat {
-    padding: 0.5rem;
-    border-radius: 8px;
-    background: #f9f9fb;
+    padding: 1rem;
+    background: var(--secondary);
+    border-radius: var(--border-radius);
     text-align: center;
+    box-shadow: 0 2px 4px var(--shadow);
+  }
+
+  .stat .label {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+
+  .stat .value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-hover);
   }
 
   .content-section {
-    margin-top: 1.5rem;
+    margin-top: 2rem;
   }
 
   .links-list {
     padding: 1rem;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius);
+    background: var(--surface);
+    box-shadow: 0 2px 4px var(--shadow);
   }
 
   .link-item {
@@ -244,7 +299,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--secondary);
   }
 
   .link-item:last-child {
@@ -252,26 +307,33 @@
   }
 
   .link-url {
+    color: var(--primary-hover);
     word-break: break-word;
   }
 
   .status {
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    background: #4CAF50;
+    background: var(--primary);
     color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    font-weight: bold;
   }
 
   .toggle-canvas-btn {
-    padding: 8px 16px;
     margin-top: 1rem;
-    background: #2196F3;
+    background: var(--primary);
     color: white;
+    padding: 0.5rem 1rem;
     border: none;
-    border-radius: 8px;
-    white-space: nowrap; /* Prevents text wrapping */
+    border-radius: var(--border-radius);
+    font-size: 1rem;
     cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .toggle-canvas-btn:hover {
+    transform: translateY(-3px);
   }
 
   .spinner {
@@ -288,29 +350,4 @@
       transform: rotate(360deg);
     }
   }
-
-  /* Mobile Responsiveness */
-  @media (max-width: 768px) {
-    .stats {
-      flex-direction: column;
-    }
-
-    .url-input {
-      flex-direction: column; /* Stack input and button vertically */
-    }
-
-    input,
-    .submit-btn {
-      width: 100%; /* Full width on smaller screens */
-    }
-
-    .toggle-canvas-btn {
-      width: 100%; /* Full width for consistent layout */
-    }
-
-    .links-list {
-      font-size: 0.875rem; /* Slightly smaller text for better readability */
-    }
-  }
 </style>
-
