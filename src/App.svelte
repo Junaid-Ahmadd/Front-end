@@ -97,7 +97,7 @@
           </svg>
           Processing...
         {:else}
-          <span>🚀 Start Crawling</span>
+          <span>Start Crawling</span>
         {/if}
       </button>
     </div>
@@ -116,15 +116,6 @@
     {/if}
   </div>
 
-{#if screenshots.size > 0}
-      <button
-        class="view-canvas toggle-canvas-btn"
-        on:click={toggleCanvas}
-      >
-        {isCanvasOpen ? 'Hide Screenshots' : 'View Screenshots'}
-      </button>
-    {/if}
-
   <div class="content-section">
     {#if totalLinks > 0}
       <div class="links-list">
@@ -133,14 +124,21 @@
           <div class="link-item">
             <span class="link-url">{link}</span>
             {#if screenshots.has(link)}
-              <span class="status captured">Captured</span>
+              <span class="status captured">✔ Captured</span>
             {/if}
           </div>
         {/each}
       </div>
     {/if}
 
-    
+    {#if screenshots.size > 0}
+      <button
+        class="view-canvas toggle-canvas-btn"
+        on:click={toggleCanvas}
+      >
+        {isCanvasOpen ? 'Hide Screenshots' : 'View Screenshots'}
+      </button>
+    {/if}
   </div>
 
   {#if isCanvasOpen}
@@ -154,144 +152,91 @@
 </main>
 
 <style>
-  /* Global variables for colors and fonts */
-  :root {
-    --primary: #6c63ff;
-    --primary-hover: #584fd1;
-    --secondary: #f3f4f6;
-    --text-primary: #333;
-    --text-secondary: #666;
-    --background: #f9f9fb;
-    --surface: #fff;
-    --shadow: rgba(0, 0, 0, 0.1);
-    --border-radius: 10px;
-    --font-family: 'Roboto', sans-serif;
-  }
-
   /* General styles */
-  body {
-    font-family: var(--font-family);
-    color: var(--text-primary);
-    background: var(--background);
-    margin: 0;
-    padding: 0;
-  }
-
   .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
-    box-shadow: 0 4px 6px var(--shadow);
-    border-radius: var(--border-radius);
-    background: var(--surface);
+    padding: 1rem; /* Reduced padding for better responsiveness */
   }
 
   .header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   h1 {
-    font-size: 2.5rem;
+    font-size: 2rem; /* Slightly smaller font for better mobile readability */
     margin: 0;
-    background: linear-gradient(45deg, var(--primary), var(--primary-hover));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
   }
 
   .subtitle {
-    color: var(--text-secondary);
     font-size: 1rem;
+    margin: 0.5rem 0 0;
   }
 
   .input-section {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     padding: 1rem;
-    background: linear-gradient(135deg, var(--primary-hover), var(--primary));
-    border-radius: var(--border-radius);
-    box-shadow: 0 4px 6px var(--shadow);
-    color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   .url-input {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem; /* Reduced gap for compact layout */
     align-items: center;
+    flex-wrap: wrap; /* Ensures input and button stack on smaller screens */
   }
 
   input {
     flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: var(--border-radius);
-    box-shadow: inset 0 2px 4px var(--shadow);
-  }
-
-  input:disabled {
-    background: var(--secondary);
+    padding: 8px; /* Compact padding */
+    border: 1px solid #ccc;
+    border-radius: 8px;
   }
 
   .submit-btn {
-    padding: 0.5rem 1rem;
+    padding: 8px 16px;
     border: none;
-    border-radius: var(--border-radius);
-    background: var(--surface);
-    color: var(--primary-hover);
+    border-radius: 8px;
+    background: #4CAF50;
+    color: white;
     cursor: pointer;
-    font-weight: bold;
+    white-space: nowrap; /* Prevents text wrapping */
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: all 0.3s;
   }
 
   .submit-btn:disabled {
-    background: var(--secondary);
-    color: var(--text-secondary);
+    background: #ccc;
     cursor: not-allowed;
-  }
-
-  .submit-btn:hover:not(:disabled) {
-    background: var(--primary-hover);
-    color: white;
-    transform: translateY(-2px);
   }
 
   .stats {
     display: flex;
+    flex-wrap: wrap; /* Ensures stats stack on smaller screens */
     gap: 1rem;
     margin-top: 1rem;
     justify-content: space-between;
   }
 
   .stat {
-    padding: 1rem;
-    background: var(--secondary);
-    border-radius: var(--border-radius);
+    padding: 0.5rem;
+    border-radius: 8px;
+    background: #f9f9fb;
     text-align: center;
-    box-shadow: 0 2px 4px var(--shadow);
-  }
-
-  .stat .label {
-    color: var(--text-secondary);
-    font-size: 0.875rem;
-  }
-
-  .stat .value {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--primary-hover);
   }
 
   .content-section {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
   }
 
   .links-list {
     padding: 1rem;
-    border-radius: var(--border-radius);
-    background: var(--surface);
-    box-shadow: 0 2px 4px var(--shadow);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .link-item {
@@ -299,7 +244,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--secondary);
+    border-bottom: 1px solid #eee;
   }
 
   .link-item:last-child {
@@ -307,33 +252,26 @@
   }
 
   .link-url {
-    color: var(--primary-hover);
     word-break: break-word;
   }
 
   .status {
-    background: var(--primary);
-    color: white;
     padding: 0.25rem 0.5rem;
-    border-radius: var(--border-radius);
+    border-radius: 4px;
     font-size: 0.875rem;
-    font-weight: bold;
+    background: #4CAF50;
+    color: white;
   }
 
   .toggle-canvas-btn {
+    padding: 8px 16px;
     margin-top: 1rem;
-    background: var(--primary);
+    background: #2196F3;
     color: white;
-    padding: 0.5rem 1rem;
     border: none;
-    border-radius: var(--border-radius);
-    font-size: 1rem;
+    border-radius: 8px;
+    white-space: nowrap; /* Prevents text wrapping */
     cursor: pointer;
-    transition: transform 0.2s;
-  }
-
-  .toggle-canvas-btn:hover {
-    transform: translateY(-3px);
   }
 
   .spinner {
@@ -350,4 +288,29 @@
       transform: rotate(360deg);
     }
   }
+
+  /* Mobile Responsiveness */
+  @media (max-width: 768px) {
+    .stats {
+      flex-direction: column;
+    }
+
+    .url-input {
+      flex-direction: column; /* Stack input and button vertically */
+    }
+
+    input,
+    .submit-btn {
+      width: 100%; /* Full width on smaller screens */
+    }
+
+    .toggle-canvas-btn {
+      width: 100%; /* Full width for consistent layout */
+    }
+
+    .links-list {
+      font-size: 0.875rem; /* Slightly smaller text for better readability */
+    }
+  }
 </style>
+
