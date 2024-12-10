@@ -116,7 +116,7 @@
     {/if}
   </div>
 
- {#if screenshots.size > 0}
+{#if screenshots.size > 0}
       <button
         class="view-canvas toggle-canvas-btn"
         on:click={toggleCanvas}
@@ -124,7 +124,6 @@
         {isCanvasOpen ? 'Hide Screenshots' : 'View Screenshots'}
       </button>
     {/if}
-  </div>
 
   <div class="content-section">
     {#if totalLinks > 0}
@@ -134,14 +133,15 @@
           <div class="link-item">
             <span class="link-url">{link}</span>
             {#if screenshots.has(link)}
-              <span class="status captured">✔ Captured</span>
+              <span class="status captured">Captured</span>
             {/if}
           </div>
         {/each}
       </div>
     {/if}
 
-   
+    
+  </div>
 
   {#if isCanvasOpen}
     <InfiniteCanvas
